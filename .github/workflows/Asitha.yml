@@ -1,12 +1,12 @@
-name: SxL-ASITHS
+name: SxL 
 
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
   schedule:
     - cron: '0 */6 * * *'  # Every 6 hours
 
@@ -16,28 +16,21 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.x]
-
-    env:
-      SESSION_ID: "𝙰𝚂𝙸𝚃𝙷𝙰-𝙼𝙳=frQzHSyB#XgiOwyhQyD9i_IGx8tysS4Wbf4KEOvgu-7l8H6qhOSk"
-      GITHUB_AUTH_TOKEN: "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"
-       GITHUB_USERNAME: "MRFGS"
+    runs-on: ubuntu-latest 
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+    - name: Map environment variables
+      run: |
+        echo "GITHUB_AUTH_TOKEN=${{ secrets.MY_AUTH_TOKEN }}" >> $GITHUB_ENV
+        echo "SESSION_ID=${{ secrets.SESSION_ID }}" >> $GITHUB_ENV
+        echo "GITHUB_USERNAME=${{ secrets.MY_USERNAME }}" >> $GITHUB_ENV
 
     - name: Install dependencies
-      run: npm install --legacy-peer-deps
+      run: npm install
 
-    - name: Start application
+    - name: start
       run: npm start
